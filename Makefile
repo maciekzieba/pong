@@ -6,4 +6,4 @@ run: build
 	bin/pong
 
 test:
-	GO111MODULE=on go mod download && go test ./...
+	GO111MODULE=on go mod download && go test ./... --cover
