@@ -6,6 +6,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestBallServe(t *testing.T) {
+	ball := NewBall(5, 5, BallVectorLeftUp)
+	ball.Serve(ServeSideLeft, 1, 1)
+	assert.Equal(t, 1, ball.PosX)
+	assert.Equal(t, 1, ball.PosY)
+	assert.Equal(t, BallVectorRightDown, ball.Vector)
+
+	ball = NewBall(5, 5, BallVectorLeftUp)
+	ball.Serve(ServeSideRight, 10, 10)
+	assert.Equal(t, 10, ball.PosX)
+	assert.Equal(t, 10, ball.PosY)
+	assert.Equal(t, BallVectorDownLeft, ball.Vector)
+}
+
 func TestBallMove(t *testing.T) {
 	ball := NewBall(5, 5, BallVectorLeftUp)
 	ball.Move()

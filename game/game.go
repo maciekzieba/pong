@@ -105,6 +105,20 @@ func (m *Match) detectRacketCollision() object.BallHitValue {
 	return object.BallHitNone
 }
 
+func (m *Match) detectPointLoss() {
+	if m.Ball.PosX <= 0 {
+		m.Board.PlayerBScore++
+		servePosX := m.Board.Width - object.RacketPadding - 1
+		servePosY := m.PlayerB.Racket.Pos
+		m.Ball.Serve(object.ServeSideRight, servePosX, servePosY)
+	} else if m.Ball.PosX >= m.Board.Width {
+		m.Board.PlayerAScore++
+		servePosX := object.RacketPadding + 1
+		servePosY := m.PlayerA.Racket.Pos
+		m.Ball.Serve(object.ServeSideLeft, servePosX, servePosY)
+	}
+}
+
 func (m *Match) refreshBall() {
 	m.Ball.Move()
 }
@@ -117,6 +131,7 @@ func (m *Match) refreshBoard() {
 
 	m.Ball.Hit(m.detectBandCollision())
 	m.Ball.Hit(m.detectRacketCollision())
+	m.detectPointLoss()
 
 	m.Drawer.Draw(m.Board)
 }

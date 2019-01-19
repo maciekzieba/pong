@@ -11,11 +11,15 @@ const (
 	BallHitRight ballHit = 2
 	BallHitUp    ballHit = 3
 	BallHitDown  ballHit = 4
+
+	ServeSideLeft  serveSide = 0
+	ServeSideRight serveSide = 1
 )
 
 type (
 	ballVector int
 	ballHit    int
+	serveSide  int
 
 	BallHitValue interface {
 		BallHit() ballHit
@@ -24,12 +28,21 @@ type (
 	BallVectorValue interface {
 		BallVector() ballVector
 	}
+
+	ServeSideValue interface {
+		ServeSide() serveSide
+	}
+
 	Ball struct {
 		PosX   int
 		PosY   int
 		Vector ballVector
 	}
 )
+
+func (ss serveSide) ServeSide() serveSide {
+	return ss
+}
 
 func (bv ballVector) BallVector() ballVector {
 	return bv
@@ -45,6 +58,16 @@ func NewBall(posX int, posY int, vector ballVector) *Ball {
 		PosY:   posY,
 		Vector: vector,
 	}
+}
+
+func (b *Ball) Serve(fromSide ServeSideValue, posX int, posY int) {
+	if fromSide == ServeSideLeft {
+		b.Vector = BallVectorRightDown
+	} else {
+		b.Vector = BallVectorDownLeft
+	}
+	b.PosX = posX
+	b.PosY = posY
 }
 
 func (b *Ball) Hit(hitValue BallHitValue) {
