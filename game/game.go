@@ -56,8 +56,8 @@ func (m *Match) StartMatch(drawer ui.Drawer) {
 }
 
 func (m *Match) loop() {
-	tick := time.Tick(50 * time.Millisecond)
-	ballTick := time.Tick(250 * time.Millisecond)
+	tick := time.Tick(1 * time.Millisecond)
+	ballTick := time.Tick(150 * time.Millisecond)
 	for {
 		select {
 		case <-tick:
@@ -79,8 +79,13 @@ func (m *Match) moveRocket(racket *object.Racket, vector object.RacketVectorValu
 }
 
 func (m *Match) readPlayersInput() {
-	m.moveRocket(m.PlayerA.Racket, m.PlayerA.Controller.Move())
-	m.moveRocket(m.PlayerB.Racket, m.PlayerB.Controller.Move())
+	select {
+	case vector := <-m.PlayerA.Input:
+		m.moveRocket(m.PlayerA.Racket, vector)
+	case vector := <-m.PlayerB.Input:
+		m.moveRocket(m.PlayerB.Racket, vector)
+	default:
+	}
 }
 
 func (m *Match) detectBandCollision() object.BallHitValue {

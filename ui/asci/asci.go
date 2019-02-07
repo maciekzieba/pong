@@ -36,7 +36,9 @@ func (a *Asci) Draw(b *board.Board) {
 	tm.Print(tm.Color(fmt.Sprintf("%d : %d", b.PlayerAScore, b.PlayerBScore), tm.RED))
 
 	tm.MoveCursor(1, b.Height+2)
-	tm.Print(fmt.Sprintf("x: %d y:%d", b.BallPosX, b.BallPosY))
+	tm.Print(fmt.Sprintf("Ball x: %d y:%d", b.BallPosX, b.BallPosY))
+	tm.MoveCursor(1, b.Height+3)
+	tm.Print(fmt.Sprintf("PlayerA:%d PlayerB:%d", b.RacketAPos, b.RacketBPos))
 	tm.Flush()
 
 }
