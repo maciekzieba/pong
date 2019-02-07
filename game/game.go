@@ -35,8 +35,8 @@ type (
 )
 
 func NewMatch(playerA *player.Player, playerB *player.Player) *Match {
-	playerA.Racket = object.NewRacket(2)
-	playerB.Racket = object.NewRacket(2)
+	playerA.Racket = object.NewRacket(5)
+	playerB.Racket = object.NewRacket(5)
 
 	match := &Match{
 		PlayerA:   playerA,
@@ -55,14 +55,6 @@ func (m *Match) StartMatch(drawer ui.Drawer) {
 	m.loop()
 }
 
-func (m *Match) MovePlayerRacket(player *player.Player, vector object.RacketVectorValue) {
-	if vector == object.RacketVectorUp {
-		player.Racket.Pos--
-	} else if vector == object.RacketVectorDown {
-		player.Racket.Pos++
-	}
-}
-
 func (m *Match) loop() {
 	tick := time.Tick(50 * time.Millisecond)
 	ballTick := time.Tick(250 * time.Millisecond)
@@ -70,11 +62,25 @@ func (m *Match) loop() {
 		select {
 		case <-tick:
 			m.refreshBoard()
+			m.readPlayersInput()
 			break
 		case <-ballTick:
 			m.refreshBall()
 		}
 	}
+}
+
+func (m *Match) moveRocket(racket *object.Racket, vector object.RacketVectorValue) {
+	if vector == object.RacketVectorUp && racket.Pos > 1 {
+		racket.Pos--
+	} else if vector == object.RacketVectorDown && (racket.Pos+object.RacketSize) <= m.Board.Height {
+		racket.Pos++
+	}
+}
+
+func (m *Match) readPlayersInput() {
+	m.moveRocket(m.PlayerA.Racket, m.PlayerA.Controller.Move())
+	m.moveRocket(m.PlayerB.Racket, m.PlayerB.Controller.Move())
 }
 
 func (m *Match) detectBandCollision() object.BallHitValue {
