@@ -1,15 +1,20 @@
 package player
 
-import "github.com/maciekzieba/pong/object"
+import (
+	"github.com/maciekzieba/pong/io"
+	"github.com/maciekzieba/pong/object"
+)
 
 type Player struct {
-	Name   string
-	Racket *object.Racket
+	Name       string
+	Racket     *object.Racket
+	Controller io.Controller
 }
 
-func NewPlayer(name string) *Player {
+func NewPlayer(name string, controller io.Controller) *Player {
 	return &Player{
-		Name:   name,
-		Racket: nil,
+		Name:       name,
+		Racket:     nil,
+		Controller: controller,
 	}
 }
